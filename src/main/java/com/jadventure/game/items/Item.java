@@ -25,6 +25,7 @@ public class Item {
     private String name;
     private String itemID;
     private String description;
+    private String bodypart;
     public HashMap<String, Integer> properties;
 
     public Item(String itemID) {
@@ -39,6 +40,10 @@ public class Item {
         return this.itemID;
     }
 
+    public String getBodypart(){
+        return this.bodypart;
+    }
+
     public double getWeight() {
         return this.properties.get("weight");
     }
@@ -49,6 +54,14 @@ public class Item {
             return this.name.equals(i.name);
         }
         return false;
+    }
+
+    public void display() {
+        System.out.println("Name: " + this.name +
+                "\nDescription: " + this.description);
+        for (Map.Entry entry : this.properties.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
     }
 
     // gets data about an item based on its itemID
@@ -73,6 +86,7 @@ public class Item {
             JsonObject itemData = entry.getValue().getAsJsonObject();
             String name = itemData.get("name").getAsString();
             String description = itemData.get("description").getAsString();
+            String bodypart = itemData.get("bodypart").getAsString();
             //HashMap<String,Integer>
             JsonObject sProps = itemData.get("properties").getAsJsonObject();
             HashMap properties = new HashMap();
@@ -83,6 +97,7 @@ public class Item {
             itemDetails.put("name", name);
             itemDetails.put("description", description);
             itemDetails.put("properties", properties);
+            itemDetails.put("bodypart", bodypart);
             itemList.put(rawItemID,itemDetails);
         }
         for (Map.Entry<String, HashMap> item : itemList.entrySet()) {
@@ -90,6 +105,7 @@ public class Item {
                 this.itemID = item.getKey();
                 this.name = item.getValue().get("name").toString();
                 this.description = item.getValue().get("description").toString();
+                this.bodypart = item.getValue().get("bodypart").toString();
                 this.properties = (HashMap<String,Integer>)item.getValue().get("properties");
             }
         }
